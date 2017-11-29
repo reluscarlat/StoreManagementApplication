@@ -5,9 +5,14 @@
  */
 package view;
 
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.User;
 import service.MainService;
@@ -29,12 +34,22 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         jMenuItem9.addActionListener(e -> returnToLogIn());
         jButton1.addActionListener(e ->addUser());
         jButton2.addActionListener(e -> searchUsers());
+        jTable1.addMouseListener( new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                if(SwingUtilities.isRightMouseButton(me)) {
+                    int row = jTable1.rowAtPoint(me.getPoint());
+                    jTable1.changeSelection(row, 0, false, false);
+                    createPopupMenu(me.getX(), me.getY());
+                }
+            }
+        });
         showTable();
         setLocationRelativeTo(null);
         setVisible(true);
     }
     
-    public void addUser(){
+    public void addUser() {
         String username = jTextField1.getText();
         String pass = jTextField2.getText();
         String first_name = jTextField3.getText();
@@ -91,6 +106,13 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         new LoginFrame();
     }
     
+    public void createPopupMenu(int x, int y) {
+       jPopupMenu1.add(jMenuItem10);
+       jPopupMenu1.add(jMenuItem11);
+       jPopupMenu1.setLocation(x, y);
+       jPopupMenu1.setVisible(true);
+    }
+   
     public void showTable() {
         MainService mainService = MainService.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
@@ -107,7 +129,7 @@ public class BackOfficeFrame extends javax.swing.JFrame {
             model.addRow(data);
         }
     }
-    
+
 //    public void showList(){
 //        MainService mainService = MainService.getInstance();
 //        List<User> users_list = mainService.getUsers();
@@ -119,6 +141,9 @@ public class BackOfficeFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
@@ -155,6 +180,10 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
+
+        jMenuItem10.setText("jMenuItem10");
+
+        jMenuItem11.setText("jMenuItem11");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -411,6 +440,8 @@ public class BackOfficeFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -419,6 +450,7 @@ public class BackOfficeFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
