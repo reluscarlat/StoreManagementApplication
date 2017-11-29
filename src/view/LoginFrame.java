@@ -14,7 +14,9 @@ import service.MainService;
  * @author relu
  */
 public class LoginFrame extends javax.swing.JFrame {
-
+/*
+    Branch 2
+    */
     /**
      * Creates new form LoginFrame
      */
