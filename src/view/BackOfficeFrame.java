@@ -28,9 +28,6 @@ public class BackOfficeFrame extends javax.swing.JFrame {
     
     public BackOfficeFrame() {
         initComponents();
-//        model = new DefaultListModel();
-//        jList1.setModel(model);
-//        showList();
         jMenuItem9.addActionListener(e -> returnToLogIn());
         jButton1.addActionListener(e ->addUser());
         jButton2.addActionListener(e -> searchUsers());
@@ -39,14 +36,28 @@ public class BackOfficeFrame extends javax.swing.JFrame {
             public void mouseClicked(MouseEvent me) {
                 if(SwingUtilities.isRightMouseButton(me)) {
                     int row = jTable1.rowAtPoint(me.getPoint());
+                    String username = jTable1.getValueAt(row, 1).toString();
                     jTable1.changeSelection(row, 0, false, false);
-                    createPopupMenu(me.getX(), me.getY());
+                    jPopupMenu1.show(me.getComponent(), me.getX(), me.getY());
+                    jMenuItem11.addActionListener(e -> deleteUser(username));
                 }
             }
         });
+        jMenuItem10.setText("Modify");
+        jMenuItem11.setText("Delete");
+        jPopupMenu1.add(jMenuItem10);
+        jPopupMenu1.add(jMenuItem11);
         showTable();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+    
+    public void deleteUser(String username) {
+        MainService mainService = MainService.getInstance();
+        mainService.deleteUsers(username);
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
     }
     
     public void addUser() {
@@ -80,7 +91,6 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
         List<User> users_list =  mainService.searchUsers(username, role, first_name, last_name);
-         // PROBLEMA DE REZOLVAT LA LISTA_USERI DIN SEARCH => E GOALA
         Object [] data  = new Object[6];
         for(int i = 0 ; i < users_list.size() ; i++) {
             User user = users_list.get(i);
@@ -105,13 +115,6 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         this.dispose();
         new LoginFrame();
     }
-    
-    public void createPopupMenu(int x, int y) {
-       jPopupMenu1.add(jMenuItem10);
-       jPopupMenu1.add(jMenuItem11);
-       jPopupMenu1.setLocation(x, y);
-       jPopupMenu1.setVisible(true);
-    }
    
     public void showTable() {
         MainService mainService = MainService.getInstance();
@@ -129,13 +132,6 @@ public class BackOfficeFrame extends javax.swing.JFrame {
             model.addRow(data);
         }
     }
-
-//    public void showList(){
-//        MainService mainService = MainService.getInstance();
-//        List<User> users_list = mainService.getUsers();
-//        model.clear();
-//        users_list.forEach(model::addElement);          
-//    }
          
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -142,7 +142,7 @@ public class UserDao {
     }
     
     public void deleteUser(String username) throws SQLException {
-        String command = "delete from user where username = ?";
+        String command = "delete from users where username = ?";
         try(PreparedStatement statement = connection.prepareStatement(command)) {
             statement.setString(1, username);
             statement.executeUpdate();
