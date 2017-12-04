@@ -151,5 +151,28 @@ public class UserDao {
         }
     }
     
+    public void updateUser(String username, String modified_data, int column_index) throws SQLException {
+        String command = "";
+        switch(column_index) {
+            case 0 :
+                command = "update users set username = ? where username = ?";
+            case 1 :
+                command = "update users set pass = ? where username = ?";
+            case 2 :
+                command = "update users set employ_first_name = ? where username = ?";
+            case 3 :
+                command = "update users set employ_name = ? where username = ?";
+            case 4 :
+                command = "update users set role = ? where username = ?";
+        }
+        try(PreparedStatement statement = connection.prepareStatement(command)) {
+            statement.setString(1, modified_data);
+            statement.setString(2, username);
+            statement.executeUpdate();
+        } catch(SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 
 }
