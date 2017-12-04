@@ -6,6 +6,8 @@
 package view;
 
 import java.awt.Point;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -22,10 +24,6 @@ import service.MainService;
  * @author relu
  */
 public class BackOfficeFrame extends javax.swing.JFrame {
-
-    
-    
-    
     public BackOfficeFrame() {
         initComponents();
         jMenuItem9.addActionListener(e -> returnToLogIn());
@@ -36,11 +34,21 @@ public class BackOfficeFrame extends javax.swing.JFrame {
             public void mouseClicked(MouseEvent me) {
                 if(SwingUtilities.isRightMouseButton(me)) {
                     int row = jTable1.rowAtPoint(me.getPoint());
-                    String username = jTable1.getValueAt(row, 1).toString();
+                    String username = jTable1.getValueAt(row, 0).toString();
                     jTable1.changeSelection(row, 0, false, false);
                     jPopupMenu1.show(me.getComponent(), me.getX(), me.getY());
                     jMenuItem11.addActionListener(e -> deleteUser(username));
                 }
+            }
+        });
+        jTable1.addFocusListener(new FocusAdapter(){
+            @Override
+            public void focusLost(FocusEvent e){
+                int row = jTable1.getSelectedRow();
+                int column = jTable1.getSelectedColumn();
+                String username = jTable1.getValueAt(row, 0).toString();
+                String modified_data = jTable1.getValueAt(row, column).toString();
+                updateUser(username, modified_data, column);
             }
         });
         jMenuItem10.setText("Modify");
@@ -60,6 +68,14 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         showTable();
     }
     
+    public void updateUser(String username, String modified_data, int column_index) {
+        MainService mainService = MainService.getInstance();
+        mainService.updateUser(username, modified_data, column_index);
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
+    }
+    
     public void addUser() {
         String username = jTextField1.getText();
         String pass = jTextField2.getText();
@@ -74,7 +90,7 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
-        jTextField5.setText("");
+        jTextField5.setText("normal");
         
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
@@ -94,20 +110,17 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         Object [] data  = new Object[6];
         for(int i = 0 ; i < users_list.size() ; i++) {
             User user = users_list.get(i);
-            data[0] = (Object)user.getUser_id();
-            data[1] = (Object)user.getUsername();
-            data[2] = (Object)user.getPass();
-            data[3] = (Object)user.getEmploy_name();
-            data[4] = (Object)user.getEmploy_first_name();
-            data[5] = (Object)user.getRole();
+            data[0] = (Object)user.getUsername();
+            data[1] = (Object)user.getPass();
+            data[2] = (Object)user.getEmploy_name();
+            data[3] = (Object)user.getEmploy_first_name();
+            data[4] = (Object)user.getRole();
             model.addRow(data);
         }
-       
         jTextField6.setText("");
         jTextField7.setText("");
         jTextField8.setText("");
         jTextField9.setText("");
-        
     }
     
     public void returnToLogIn() {
@@ -123,12 +136,11 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         Object [] data  = new Object[6];
         for(int i = 0 ; i < users_list.size() ; i++) {
             User user = users_list.get(i);
-            data[0] = (Object)user.getUser_id();
-            data[1] = (Object)user.getUsername();
-            data[2] = (Object)user.getPass();
-            data[3] = (Object)user.getEmploy_name();
-            data[4] = (Object)user.getEmploy_first_name();
-            data[5] = (Object)user.getRole();
+            data[0] = (Object)user.getUsername();
+            data[1] = (Object)user.getPass();
+            data[2] = (Object)user.getEmploy_name();
+            data[3] = (Object)user.getEmploy_first_name();
+            data[4] = (Object)user.getRole();
             model.addRow(data);
         }
     }
@@ -184,6 +196,11 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextField5.setText("normal");
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -277,7 +294,7 @@ public class BackOfficeFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Username", "Password", "First Name", "Last Name", "role"
+                "Username", "Password", "First Name", "Last Name", "role"
             }
         ));
         jScrollPane2.setViewportView(jTable1);
@@ -417,6 +434,10 @@ public class BackOfficeFrame extends javax.swing.JFrame {
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField6ActionPerformed
+
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
