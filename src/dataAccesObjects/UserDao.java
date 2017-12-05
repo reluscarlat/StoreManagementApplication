@@ -156,18 +156,25 @@ public class UserDao {
         switch(column_index) {
             case 0 :
                 command = "update users set username = ? where username = ?";
+                break;
             case 1 :
                 command = "update users set pass = ? where username = ?";
+                break;
             case 2 :
                 command = "update users set employ_first_name = ? where username = ?";
+                break;
             case 3 :
                 command = "update users set employ_name = ? where username = ?";
+                break;
             case 4 :
                 command = "update users set role = ? where username = ?";
+                break;
         }
         try(PreparedStatement statement = connection.prepareStatement(command)) {
             statement.setString(1, modified_data);
             statement.setString(2, username);
+            System.out.println("focus lost + \n"+username +"\n" + modified_data +"\n" + column_index);
+            System.out.println(statement.toString());
             statement.executeUpdate();
         } catch(SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
