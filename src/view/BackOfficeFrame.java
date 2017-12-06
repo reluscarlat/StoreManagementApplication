@@ -5,15 +5,20 @@
  */
 package view;
 
+import com.sun.glass.events.KeyEvent;
+import java.awt.AWTException;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.User;
@@ -29,28 +34,20 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         jMenuItem9.addActionListener(e -> returnToLogIn());
         jButton1.addActionListener(e ->addUser());
         jButton2.addActionListener(e -> searchUsers());
+        jButton3.addActionListener(e ->saveChanges());
         jTable1.addMouseListener( new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent me) {
                 if(SwingUtilities.isRightMouseButton(me)) {
                     int row = jTable1.rowAtPoint(me.getPoint());
-                    String username = jTable1.getValueAt(row, 0).toString();
+                    String username = jTable1.getValueAt(row, 1).toString();
                     jTable1.changeSelection(row, 0, false, false);
                     jPopupMenu1.show(me.getComponent(), me.getX(), me.getY());
                     jMenuItem11.addActionListener(e -> deleteUser(username));
                 }
             }
         });
-        jTable1.addFocusListener(new FocusAdapter(){
-            @Override
-            public void focusLost(FocusEvent e){
-                int row = jTable1.getSelectedRow();
-                int column = jTable1.getSelectedColumn();
-                String username = jTable1.getValueAt(row, 0).toString();
-                String modified_data = jTable1.getValueAt(row, column).toString();
-                updateUser(username, modified_data, column);
-            }
-        });
+        
         jMenuItem10.setText("Modify");
         jMenuItem11.setText("Delete");
         jPopupMenu1.add(jMenuItem10);
@@ -63,14 +60,6 @@ public class BackOfficeFrame extends javax.swing.JFrame {
     public void deleteUser(String username) {
         MainService mainService = MainService.getInstance();
         mainService.deleteUsers(username);
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        model.setRowCount(0);
-        showTable();
-    }
-    
-    public void updateUser(String username, String modified_data, int column_index) {
-        MainService mainService = MainService.getInstance();
-        mainService.updateUser(username, modified_data, column_index);
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
         showTable();
@@ -110,17 +99,33 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         Object [] data  = new Object[6];
         for(int i = 0 ; i < users_list.size() ; i++) {
             User user = users_list.get(i);
-            data[0] = (Object)user.getUsername();
-            data[1] = (Object)user.getPass();
-            data[2] = (Object)user.getEmploy_name();
-            data[3] = (Object)user.getEmploy_first_name();
-            data[4] = (Object)user.getRole();
+            data[0] = (Object)user.getUser_id();
+            data[1] = (Object)user.getUsername();
+            data[2] = (Object)user.getPass();
+            data[3] = (Object)user.getEmploy_name();
+            data[4] = (Object)user.getEmploy_first_name();
+            data[5] = (Object)user.getRole();
             model.addRow(data);
         }
         jTextField6.setText("");
         jTextField7.setText("");
         jTextField8.setText("");
         jTextField9.setText("");
+    }
+    
+    public void saveChanges() {
+        MainService mainService = MainService.getInstance();
+        int rows_number = jTable1.getRowCount();  
+        
+        for(int i = 0 ; i < rows_number ; i ++ ){
+            int id = (int)jTable1.getValueAt(i, 0);
+            String username = jTable1.getValueAt(i, 1).toString();
+            String password = jTable1.getValueAt(i, 2).toString();
+            String first_name = jTable1.getValueAt(i, 3).toString();
+            String last_name = jTable1.getValueAt(i, 4).toString();
+            String role = jTable1.getValueAt(i,5).toString();
+            mainService.updateUser(id, username, password, first_name, last_name, role);
+        }     
     }
     
     public void returnToLogIn() {
@@ -136,11 +141,12 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         Object [] data  = new Object[6];
         for(int i = 0 ; i < users_list.size() ; i++) {
             User user = users_list.get(i);
-            data[0] = (Object)user.getUsername();
-            data[1] = (Object)user.getPass();
-            data[2] = (Object)user.getEmploy_name();
-            data[3] = (Object)user.getEmploy_first_name();
-            data[4] = (Object)user.getRole();
+            data[0] = (Object)user.getUser_id();
+            data[1] = (Object)user.getUsername();
+            data[2] = (Object)user.getPass();
+            data[3] = (Object)user.getEmploy_name();
+            data[4] = (Object)user.getEmploy_first_name();
+            data[5] = (Object)user.getRole();
             model.addRow(data);
         }
     }
@@ -175,6 +181,7 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -294,7 +301,7 @@ public class BackOfficeFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Username", "Password", "First Name", "Last Name", "role"
+                "ID", "Username", "Password", "First Name", "Last Name", "role"
             }
         ));
         jScrollPane2.setViewportView(jTable1);
@@ -314,6 +321,8 @@ public class BackOfficeFrame extends javax.swing.JFrame {
         jLabel9.setText("Last Name");
 
         jButton2.setText("SEARCH");
+
+        jButton3.setText("SAVE CHANGES");
 
         jMenu1.setText("Administration ");
 
@@ -388,6 +397,10 @@ public class BackOfficeFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(166, 166, 166))))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -416,8 +429,10 @@ public class BackOfficeFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -442,6 +457,7 @@ public class BackOfficeFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
