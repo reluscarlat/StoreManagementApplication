@@ -28,6 +28,7 @@ public class UserDao {
     
     public boolean addUser(User user) throws SQLException {
         String select_command = "select * from users where username = ?";
+        
         try(PreparedStatement statement = connection.prepareStatement(select_command)) {
             statement.setString(1, user.getUsername());
             ResultSet rs = statement.executeQuery();
@@ -40,6 +41,7 @@ public class UserDao {
         }
         
         String command = "insert into users values (null, ?, ?, ?, ?,?)";
+        
         try(PreparedStatement statement = connection.prepareStatement(command)) {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPass());
@@ -93,6 +95,7 @@ public class UserDao {
         
         String command = "select * from users where username = " + c1 + " and employ_name = " + c2 + " and "
                 + "employ_first_name = " + c3 + " and role = " + c4 + " ";
+        
         try(PreparedStatement statement = connection.prepareStatement(command)){
             if(c1.equals("?")) statement.setString(n-(i--), username);
             if(c2.equals("?")) statement.setString(n-(i--), employ_name);
@@ -118,7 +121,7 @@ public class UserDao {
     
     public List<User> getUsers() throws SQLException {
         List<User> users_list = new ArrayList<>();
-        String command = "select * from users";
+        String command = "select * from users";      
         
         try(PreparedStatement statement = connection.prepareStatement(command);
             ResultSet rs = statement.executeQuery();
@@ -136,13 +139,13 @@ public class UserDao {
             }          
         }catch(Exception e) {
             e.printStackTrace();
-        }
-        
+        }        
         return users_list;
     }
     
     public void deleteUser(String username) throws SQLException {
         String command = "delete from users where username = ?";
+        
         try(PreparedStatement statement = connection.prepareStatement(command)) {
             statement.setString(1, username);
             statement.executeUpdate();
@@ -151,35 +154,47 @@ public class UserDao {
         }
     }
     
-    public void updateUser(String username, String modified_data, int column_index) throws SQLException {
-        String command = "";
-        switch(column_index) {
-            case 0 :
-                command = "update users set username = ? where username = ?";
-                break;
-            case 1 :
-                command = "update users set pass = ? where username = ?";
-                break;
-            case 2 :
-                command = "update users set employ_first_name = ? where username = ?";
-                break;
-            case 3 :
-                command = "update users set employ_name = ? where username = ?";
-                break;
-            case 4 :
-                command = "update users set role = ? where username = ?";
-                break;
-        }
-        try(PreparedStatement statement = connection.prepareStatement(command)) {
-            statement.setString(1, modified_data);
-            statement.setString(2, username);
-            System.out.println("focus lost + \n"+username +"\n" + modified_data +"\n" + column_index);
-            System.out.println(statement.toString());
-            statement.executeUpdate();
+    public void updateUser(int user_id,String username, String password, String first_name, String last_name, String role) throws SQLException{
+        List<User> users = new ArrayList();
+        String command1 = "Select * from users where user_id = ?";
+        String command2 = "Update users set username = ? , pass = ? , employ_first_name =? ,"
+                + "employ_name = ? , role = ? where user_id = ?";
+        
+        try(PreparedStatement statement = connection.prepareStatement(command1)) {
+            statement.setInt(1, user_id);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()){
+                User user = new User(
+                    rs.getInt("user_id"),
+                    rs.getString("username"),
+                    rs.getString("pass"),
+                    rs.getString("employ_name"),
+                    rs.getString("employ_first_name"),
+                    rs.getString("role")
+                );
+                users.add(user);
+            }
         } catch(SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        String db_username = users.get(0).getUsername();
+        String db_pass = users.get(0).getPass();
+        String db_name = users.get(0).getEmploy_name();
+        String db_first_name = users.get(0).getEmploy_first_name();
+        String db_role = users.get(0).getRole();
+        
+        if(!db_username.equals(username) || !db_pass.equals(password) || !db_name.equals(last_name)
+                || !db_first_name.equals(first_name) || !db_role.equals(role)) {
+            try(PreparedStatement statement = connection.prepareStatement(command2)){
+                statement.setString(1, username);
+                statement.setString(2, password);
+                statement.setString(3, last_name);
+                statement.setString(4, first_name);
+                statement.setString(5, role);
+                statement.setInt(6, user_id);
+                statement.executeUpdate();
+            }
+        }   
     }
-    
-
 }

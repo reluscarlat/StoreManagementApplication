@@ -34,8 +34,14 @@ public class LoginFrame extends javax.swing.JFrame {
     public void verifyCredential() {
         String username = jTextField1.getText();
         String password = new String( jPasswordField1.getPassword() );
+        String role = "";
+        if(admin_radio_b.isSelected()) {
+            role = "admin";
+        } else {
+            role = "normal";
+        }
         AuthenticationService authenticationService = AuthenticationService.getInstance();
-        if( (authenticationService.testCredentials(username, password) == true )  
+        if( (authenticationService.testCredentials(username, password, role) == true )  
                 && ( admin_radio_b.isSelected() == true ) ) {
             this.setVisible(false);
             this.dispose();

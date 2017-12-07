@@ -87,6 +87,13 @@ public class MainService {
             Logger.getLogger(MainService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-
+   
+    public void updateUser(int user_id,String username, String password, String first_name, String last_name, String role) {
+        UserDao userDao = new UserDao(this.connection);
+        try{
+            userDao.updateUser(user_id, username, password, first_name, last_name, role);
+        } catch(Exception ex) {
+            Logger.getLogger(MainService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

@@ -42,7 +42,7 @@ public class AuthenticationService {
         return singletone;
     }
     
-    public boolean testCredentials(String username, String password) {
+    public boolean testCredentials(String username, String password, String role) {
         UserDao userDao = new UserDao(connection);
         List<User> users_list = new ArrayList<User>();
         try {
@@ -53,7 +53,8 @@ public class AuthenticationService {
         int n = users_list.size();
         for(int i = 0 ; i < n ; i++) {
             if(username.equals(users_list.get(i).getUsername())
-                    && password.equals(users_list.get(i).getPass())) {
+                    && password.equals(users_list.get(i).getPass()) 
+                    && role.equals(users_list.get(i).getRole())) {
                 return true;
             }
         }
