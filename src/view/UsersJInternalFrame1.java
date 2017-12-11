@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.User;
-import service.MainService;
+import service.UserServices;
 
 /**
  *
@@ -22,15 +22,17 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
      */
     public UsersJInternalFrame1() {
         initComponents();
+        setTitle("USERS");
         showTable();
         jMenuItem1.setText("Delete");
         jPopupMenu1.add(jMenuItem1);
+        jTextField1.requestFocusInWindow();
     }
     
     public void showTable() {
-        MainService mainService = MainService.getInstance();
+        UserServices userService = UserServices.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        List<User> users_list =  mainService.getUsers();
+        List<User> users_list =  userService.getUsers();
         Object [] data  = new Object[6];
         for(int i = 0 ; i < users_list.size() ; i++) {
             User user = users_list.get(i);
@@ -51,14 +53,15 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
         String last_name = jTextField4.getText();
         String role = jTextField5.getText();
         
-        MainService mainService = MainService.getInstance();
-        mainService.addUser(username, pass,first_name, last_name,role);
+        UserServices userService = UserServices.getInstance();
+        userService.addUser(username, pass,first_name, last_name,role);
         
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
         jTextField5.setText("normal");
+        jTextField1.requestFocusInWindow();
         
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
@@ -66,16 +69,11 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
     }
         
     public void deleteUser(String username) {
-        MainService mainService = MainService.getInstance();
-        mainService.deleteUsers(username);
+        UserServices userService = UserServices.getInstance();
+        userService.deleteUsers(username);
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
         showTable();
-    }
-    
-    public void modifyUser(int row) {
-        jTable1.setRowSelectionInterval(row, row);
-        jTable1.setColumnSelectionInterval(1,1);
     }
     
     public void searchUsers() {
@@ -84,10 +82,10 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
         String first_name = jTextField8.getText();
         String last_name = jTextField9.getText();
         
-        MainService mainService = MainService.getInstance();
+        UserServices userService = UserServices.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
-        List<User> users_list =  mainService.searchUsers(username, role, first_name, last_name);
+        List<User> users_list =  userService.searchUsers(username, role, first_name, last_name);
         Object [] data  = new Object[6];
         for(int i = 0 ; i < users_list.size() ; i++) {
             User user = users_list.get(i);
@@ -103,10 +101,11 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
         jTextField7.setText("");
         jTextField8.setText("");
         jTextField9.setText("");
+        jTextField6.requestFocusInWindow();
     }
         
     public void saveChanges() {
-        MainService mainService = MainService.getInstance();
+        UserServices userService = UserServices.getInstance();
         int rows_number = jTable1.getRowCount();  
         
         for(int i = 0 ; i < rows_number ; i ++ ){
@@ -116,8 +115,12 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
             String first_name = jTable1.getValueAt(i, 3).toString();
             String last_name = jTable1.getValueAt(i, 4).toString();
             String role = jTable1.getValueAt(i,5).toString();
-            mainService.updateUser(id, username, password, first_name, last_name, role);
+            userService.updateUser(id, username, password, first_name, last_name, role);
         }     
+        
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        this.showTable();
     }
         
     /**
@@ -377,12 +380,12 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
-                        .addComponent(jLabel10)
-                        .addContainerGap())))
+                        .addComponent(jLabel10)))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47))
+                .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -391,10 +394,10 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
                     .addComponent(jLabel10)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addGap(21, 21, 21))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -431,6 +434,7 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
                     jTable1.changeSelection(row, 0, false, false);
                     jPopupMenu1.show(evt.getComponent(), evt.getX(), evt.getY());
                     jMenuItem1.addActionListener(e -> deleteUser(username));
+                    this.showTable();
                 }
     }//GEN-LAST:event_jTable1MouseClicked
 
