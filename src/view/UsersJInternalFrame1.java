@@ -352,13 +352,29 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
             new String [] {
                 "ID", "Username", "Password", "First Name", "Last Name", "role"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         jButton3.setText("SAVE CHANGES");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -434,7 +450,6 @@ public class UsersJInternalFrame1 extends javax.swing.JInternalFrame {
                     jTable1.changeSelection(row, 0, false, false);
                     jPopupMenu1.show(evt.getComponent(), evt.getX(), evt.getY());
                     jMenuItem1.addActionListener(e -> deleteUser(username));
-                    this.showTable();
                 }
     }//GEN-LAST:event_jTable1MouseClicked
 

@@ -7,7 +7,7 @@ package view;
 
 import javax.swing.JOptionPane;
 import service.AuthenticationService;
-import service.MainService;
+import service.UserServices;
 
 /**
  *
@@ -45,7 +45,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 && ( admin_radio_b.isSelected() == true ) ) {
             this.setVisible(false);
             this.dispose();
-            new BackOfficeFrame();
+            new BackOfficeFrm();
         } else {
             JOptionPane.showMessageDialog(this, "Username or password incorect.");
         }

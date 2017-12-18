@@ -5,7 +5,7 @@
  */
 package main;
 
-import view.BackOfficeFrame;
+import view.BackOfficeFrm;
 import view.LoginFrame;
 
 /**

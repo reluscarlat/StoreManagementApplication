@@ -10,12 +10,14 @@ package model;
  * @author relu
  */
 public class Store {
+    private int store_id;
     private String store_name,
             address,
             phone_number,
             email;
 
-    public Store(String store_name, String address, String phone_number, String email) {
+    public Store(int store_id, String store_name, String address, String phone_number, String email) {
+        this.store_id = store_id;
         this.store_name = store_name;
         this.address = address;
         this.phone_number = phone_number;
@@ -24,6 +26,14 @@ public class Store {
 
     public Store() {
     
+    }
+    
+    public int getStore_id() {
+        return store_id;
+    }
+
+    public void setStore_id(int store_id) {
+        this.store_id = store_id;
     }
     
     public String getStore_name() {

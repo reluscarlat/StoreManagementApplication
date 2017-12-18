@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import model.User;
 
 /**
@@ -33,9 +34,10 @@ public class UserDao {
             statement.setString(1, user.getUsername());
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
-                return false;
-            }
-        } catch(Exception e) {
+                JOptionPane.showMessageDialog(null, "This username already exists, please enter other username.");
+                return false;  
+            } 
+        } catch(Exception e) { 
             e.printStackTrace();
             return false;
         }
@@ -121,7 +123,7 @@ public class UserDao {
     
     public List<User> getUsers() throws SQLException {
         List<User> users_list = new ArrayList<>();
-        String command = "select * from users";      
+        String command = "select * from users ";      
         
         try(PreparedStatement statement = connection.prepareStatement(command);
             ResultSet rs = statement.executeQuery();
@@ -194,6 +196,9 @@ public class UserDao {
                 statement.setString(5, role);
                 statement.setInt(6, user_id);
                 statement.executeUpdate();
+            } catch(SQLException ex) {
+                Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "This username already exists, please enter other username.");
             }
         }   
     }

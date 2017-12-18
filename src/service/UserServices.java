@@ -20,25 +20,25 @@ import model.User;
  *
  * @author relu
  */
-public class MainService {
+public class UserServices {
     private String url = "jdbc:mysql://localhost/storedatabase";
     private String pass = "";
     private String user = "root";
     private Connection connection;
     
-    private MainService() {
+    private UserServices() {
         try {
             connection = DriverManager.getConnection(url, user, pass);
         } catch (SQLException ex) {
-            Logger.getLogger(MainService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private static MainService singletone = null;
+    private static UserServices singletone = null;
     
-    public static MainService getInstance(){
+    public static UserServices getInstance(){
         if(singletone == null) {
-            singletone = new MainService();
+            singletone = new UserServices();
         }
         return singletone;
     }
@@ -84,7 +84,7 @@ public class MainService {
         try{
             userDao.deleteUser(username);
         } catch(Exception ex) {
-            Logger.getLogger(MainService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
    
@@ -93,7 +93,7 @@ public class MainService {
         try{
             userDao.updateUser(user_id, username, password, first_name, last_name, role);
         } catch(Exception ex) {
-            Logger.getLogger(MainService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

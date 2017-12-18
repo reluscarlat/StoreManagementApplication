@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import model.Store;
 import model.User;
 
@@ -29,12 +30,13 @@ public class StoreDao {
         this.connection = connection;
     }
     
-    public boolean addStore(Store store) {
-        String command = "Select * from store where store_name = ?";
+    public boolean addStore(Store store) throws SQLException{
+        String command = "Select * from stores where store_name = ?";
         try(PreparedStatement statement = connection.prepareStatement(command)){
-            statement.setString(0, store.getStore_name());
+            statement.setString(1, store.getStore_name());
             ResultSet rs = statement.executeQuery();
             while(rs.next()) {
+                JOptionPane.showMessageDialog(null, "This store name already exists, please enter other store name.");
                 return false;
             }
         } catch(Exception e){
@@ -42,11 +44,11 @@ public class StoreDao {
             return false;
         } 
         String command2 = "Insert into stores values(null , ? , ? , ? , ?)";
-        try(PreparedStatement statement = connection.prepareStatement(command)){
-            statement.setString(0, store.getStore_name());
-            statement.setString(1, store.getAddress());
-            statement.setString(2, store.getPhone_number());
-            statement.setString(3, store.getEmail());
+        try(PreparedStatement statement = connection.prepareStatement(command2)){
+            statement.setString(1, store.getStore_name());
+            statement.setString(2, store.getAddress());
+            statement.setString(3, store.getPhone_number());
+            statement.setString(4, store.getEmail());
             statement.executeUpdate();
         } catch(Exception e){
             e.printStackTrace();
@@ -57,26 +59,26 @@ public class StoreDao {
     
     
     public List<Store> getStores() throws SQLException {
-        List<Store> stores_list = new ArrayList<>();
-        String command = "select * from stores";      
+        List<Store> store_list = new ArrayList<>();
+        String command = "Select * from stores ";      
         
         try(PreparedStatement statement = connection.prepareStatement(command);
             ResultSet rs = statement.executeQuery();
             ) {
             while(rs.next()) {
                 Store store = new Store(
-                        rs.getInt("store_id"),
+                        rs.getInt("id"),
                         rs.getString("store_name"),
                         rs.getString("address"),
                         rs.getString("phone_number"),
                         rs.getString("email")
                 );
-                stores_list.add(store);
+                store_list.add(store);
             }          
         }catch(Exception e) {
             e.printStackTrace();
         }        
-        return stores_list;
+        return store_list;
     }
     
     public void deleteStore(String store_name) throws SQLException {
@@ -86,22 +88,22 @@ public class StoreDao {
             statement.setString(1, store_name);
             statement.executeUpdate();
         } catch(SQLException ex) {
-            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StoreDao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public void updateStores(int store_id,String store_name, String address, String phone_number, String email) throws SQLException{
         List<Store> stores = new ArrayList();
-        String command1 = "Select * from stores where store_id = ?";
+        String command1 = "Select * from stores where id = ?";
         String command2 = "Update stores set store_name = ? , address = ? , phone_number =? ,"
-                + "email = ? where store_id = ?";
+                + "email = ? where id = ?";
         
         try(PreparedStatement statement = connection.prepareStatement(command1)) {
             statement.setInt(1, store_id);
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
                 Store store = new Store(
-                    rs.getInt("store_id"),
+                    rs.getInt("id"),
                     rs.getString("store_name"),
                     rs.getString("address"),
                     rs.getString("phone_number"),
@@ -110,7 +112,7 @@ public class StoreDao {
                 stores.add(store);
             }
         } catch(SQLException ex) {
-            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StoreDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         String db_store_name = stores.get(0).getStore_name();
@@ -127,6 +129,9 @@ public class StoreDao {
                 statement.setString(4, email);
                 statement.setInt(5, store_id);
                 statement.executeUpdate();
+            } catch (Exception ex) {
+                Logger.getLogger(StoreDao.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "This store name already exists, please insert other store name.");
             }
         }   
     }
