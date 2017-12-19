@@ -19,24 +19,24 @@ import model.Departament;
  *
  * @author relu
  */
-public class DepartamentService {
+public class DepartamentServices {
     private String url = "jdbc:mysql://localhost/storedatabase";
     private String pass = "";
     private String user = "root";
     private Connection connection;
-    private static DepartamentService singletone = null;
+    private static DepartamentServices singletone = null;
     
-    private DepartamentService() {
+    private DepartamentServices() {
         try {
             connection = DriverManager.getConnection(url, user, pass);
         } catch(SQLException ex) {
-            Logger.getLogger(StoreService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DepartamentServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public static DepartamentService getInstance(){
+    public static DepartamentServices getInstance(){
         if(singletone == null) {
-            singletone = new DepartamentService();
+            singletone = new DepartamentServices();
         }
         return singletone;
     }
@@ -72,7 +72,7 @@ public class DepartamentService {
         try{
             departamentDao.deleteDepartament(departament_name);
         } catch(SQLException ex) {
-            Logger.getLogger(StoreService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DepartamentServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -81,7 +81,7 @@ public class DepartamentService {
         try{
             departamentDao.updateDepartament(id, departament_name, description, departament_abbreviation);
         } catch(SQLException ex) {
-            Logger.getLogger(StoreService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DepartamentServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
 }

@@ -28,7 +28,36 @@ public class StoreDepartamentDao {
         this.connection = connection;
     }
     
-    public boolean addDepartament(StoreDepartament storeDep) throws SQLException {
+    public List<StoreDepartament> getStoreDepartamentsOrderedBy(String criteria) throws SQLException {
+        List<StoreDepartament> store_departaments_list = new ArrayList<>();
+        String command = "select * from \n" +
+"	(select stores_departaments.id, departaments.departament_name, departaments.departament_abbreviation, stores.store_name, stores.phone_number, stores.email\n" +
+"		from departaments left outer join stores_departaments on departaments.departament_name = stores_departaments.departament_name \n" +
+"		left outer join stores on stores_departaments.store_name = stores.store_name) as myJoin\n" +
+"			where myJoin.store_name is not null \n" +
+"				order by myJoin." + criteria;      
+        //int id, String departament_name, String departament_abbreviation, String store_name, String phone_number, String email
+        try(PreparedStatement statement = connection.prepareStatement(command);
+            ResultSet rs = statement.executeQuery();
+            ) {
+            while(rs.next()) {
+                StoreDepartament store_departament = new StoreDepartament(
+                        rs.getInt("id"),
+                        rs.getString("departament_name"),
+                        rs.getString("departament_abbreviation"),
+                        rs.getString("store_name"),
+                        rs.getString("phone_number"),
+                        rs.getString("email")
+                );
+                store_departaments_list.add(store_departament);
+            }          
+        }catch(Exception e) {
+            e.printStackTrace();
+        }        
+        return store_departaments_list;
+    }
+    
+    public boolean addStoreDepartament(StoreDepartament storeDep) throws SQLException {
         String select_command = "select * from stores_departaments where store_name = ? and departament_name = ?";
         
         try(PreparedStatement statement = connection.prepareStatement(select_command)) {
@@ -36,7 +65,7 @@ public class StoreDepartamentDao {
             statement.setString(2, storeDep.getDepartament_name());
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
-                JOptionPane.showMessageDialog(null, "This departament name already exists, please enter other departament name.");
+                JOptionPane.showMessageDialog(null, "This departament already exists, please enter other departament name or store name.");
                 return false;  
             } 
         } catch(Exception e) { 
@@ -69,14 +98,15 @@ public class StoreDepartamentDao {
         }
     }
     
-    public void updateStoreDepartmanet(int id,String store_name, String departament_name) throws SQLException{
+    public void updateStoreDepartament(int id,String store_name, String departament_name) throws SQLException{
         List<StoreDepartament> storeDeps = new ArrayList();
         String command1 = "Select * from stores_departaments where id = ?";
         String command2 = "Update stores_departaments set store_name= ? , departament_name = ?"
                 + " where id = ?";
         String command3 = "Select count(*) as 'nb' from stores_departaments where store_name = ? and "
                 + "departament_name = ?";
-        boolean verify = false;
+        boolean verify = true; // verify if the combination of store and departamnet alreay exists in table.
+        
         try(PreparedStatement statement = connection.prepareStatement(command1)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
@@ -91,6 +121,7 @@ public class StoreDepartamentDao {
         } catch(SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
         }   
+        
         String db_store_name = storeDeps.get(0).getStore_name();
         String db_departament_name = storeDeps.get(0).getDepartament_name();     
         

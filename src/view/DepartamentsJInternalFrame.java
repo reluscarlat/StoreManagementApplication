@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.Departament;
-import service.DepartamentService;
+import service.DepartamentServices;
 
 /**
  *
@@ -30,7 +30,7 @@ public class DepartamentsJInternalFrame extends javax.swing.JInternalFrame {
     }
     
     public void showTable() {
-        DepartamentService departamentService = DepartamentService.getInstance();
+        DepartamentServices departamentService = DepartamentServices.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         List<Departament> departaments_list =  departamentService.getDepartaments();
         Object [] data  = new Object[4];
@@ -49,7 +49,7 @@ public class DepartamentsJInternalFrame extends javax.swing.JInternalFrame {
         String abbreviation = jTextField2.getText();
         String description = jTextArea1.getText();
         
-        DepartamentService departamentService = DepartamentService.getInstance();
+        DepartamentServices departamentService = DepartamentServices.getInstance();
         departamentService.addDepartament(departament_name, abbreviation, description);
         
         jTextField1.setText("");
@@ -64,7 +64,7 @@ public class DepartamentsJInternalFrame extends javax.swing.JInternalFrame {
     }
         
     public void deleteDepartament(String departament_name) {
-        DepartamentService departamentService = DepartamentService.getInstance();
+        DepartamentServices departamentService = DepartamentServices.getInstance();
         departamentService.deleteDepartament(departament_name);
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
@@ -72,15 +72,15 @@ public class DepartamentsJInternalFrame extends javax.swing.JInternalFrame {
     }
     
     public void saveChanges() {
-        DepartamentService departamentService = DepartamentService.getInstance();
+        DepartamentServices departamentService = DepartamentServices.getInstance();
         int rows_number = jTable1.getRowCount();   
         
         for(int i = 0 ; i < rows_number ; i ++ ){
             int id = (int)jTable1.getValueAt(i, 0);
             String departament_name = jTable1.getValueAt(i, 1).toString();
-            String abbreviation = jTable1.getValueAt(i, 2).toString();
             String description = jTable1.getValueAt(i, 3).toString();
-            departamentService.updateDepartament(id, departament_name, abbreviation, description);
+            String departament_abbreviation = jTable1.getValueAt(i, 2).toString();
+            departamentService.updateDepartament(id, departament_name, description, departament_abbreviation);
         } 
         
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();

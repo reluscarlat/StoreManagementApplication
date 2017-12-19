@@ -19,24 +19,24 @@ import model.Store;
  *
  * @author relu
  */
-public class StoreService {
+public class StoreServices {
     private String url = "jdbc:mysql://localhost/storedatabase";
     private String pass = "";
     private String user = "root";
     private Connection connection;
-    private static StoreService singletone = null;
+    private static StoreServices singletone = null;
     
-    private StoreService() {
+    private StoreServices() {
         try {
             connection = DriverManager.getConnection(url, user, pass);
         } catch(SQLException ex) {
-            Logger.getLogger(StoreService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StoreServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public static StoreService getInstance(){
+    public static StoreServices getInstance(){
         if(singletone == null) {
-            singletone = new StoreService();
+            singletone = new StoreServices();
         }
         return singletone;
     }
@@ -73,7 +73,7 @@ public class StoreService {
         try{
             storeDao.deleteStore(store_name);
         } catch(SQLException ex) {
-            Logger.getLogger(StoreService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StoreServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -82,7 +82,7 @@ public class StoreService {
         try{
             storeDao.updateStores(store_id, store_name, address, phone_number, email);
         } catch(SQLException ex) {
-            Logger.getLogger(StoreService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StoreServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
 }

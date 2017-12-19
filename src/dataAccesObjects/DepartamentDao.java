@@ -56,7 +56,7 @@ public class DepartamentDao {
         return true;
     }
     
-        public List<Departament> getDepartaments() throws SQLException {
+    public List<Departament> getDepartaments() throws SQLException {
         List<Departament> departaments_list = new ArrayList<>();
         String command = "Select * from departaments order by id ";      
         

@@ -245,7 +245,7 @@ public class BackOfficeFrm extends javax.swing.JFrame {
         }
         logoInternalFrame.show();
         
-        DepStoreIntFrame internalFrame = new DepStoreIntFrame();
+        StoreDepJInternalFrame internalFrame = new StoreDepJInternalFrame();
         jDesktopPane1.add(internalFrame);
         try {
             internalFrame.setMaximum(true);

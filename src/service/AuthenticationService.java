@@ -29,7 +29,7 @@ public class AuthenticationService {
         try {
             connection = DriverManager.getConnection(url, user, pass);
         } catch (SQLException ex) {
-            Logger.getLogger(UserServices.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthenticationService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.Store;
 import model.User;
-import service.StoreService;
+import service.StoreServices;
 import service.UserServices;
 
 /**
@@ -32,7 +32,7 @@ public class StoreJInternalFrame extends javax.swing.JInternalFrame {
     }
     
     public void showTable() {
-        StoreService storeService = StoreService.getInstance();
+        StoreServices storeService = StoreServices.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         List<Store> stores_list =  storeService.getStores();
         Object [] data  = new Object[6];
@@ -53,7 +53,7 @@ public class StoreJInternalFrame extends javax.swing.JInternalFrame {
         String phone_number = jTextField3.getText();
         String email = jTextField4.getText();
         
-        StoreService storeService = StoreService.getInstance();
+        StoreServices storeService = StoreServices.getInstance();
         storeService.addStore(store_name, address, phone_number, email);
         
         jTextField1.setText("");
@@ -69,7 +69,7 @@ public class StoreJInternalFrame extends javax.swing.JInternalFrame {
     }
         
     public void deleteStore(String store_name) {
-        StoreService storeService = StoreService.getInstance();
+        StoreServices storeService = StoreServices.getInstance();
         storeService.deleteStore(store_name);
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
@@ -77,7 +77,7 @@ public class StoreJInternalFrame extends javax.swing.JInternalFrame {
     }
     
     public void saveChanges() {
-        StoreService storeService = StoreService.getInstance();
+        StoreServices storeService = StoreServices.getInstance();
         int rows_number = jTable1.getRowCount();   
         
         for(int i = 0 ; i < rows_number ; i ++ ){
