@@ -63,7 +63,7 @@ public class EmployeeDao {
         }
         return true;
     }
-    
+        
     public List<Employee> getEmployees() throws SQLException {
         List<Employee> employees_list = new ArrayList<>();
         String command = "Select * from employees ";      
@@ -93,8 +93,9 @@ public class EmployeeDao {
     }
     
     public List<Object[]> getEmployeesWithAddresses() {
-        List<Object[]> join_list = new ArrayList<Object[]>();
+        List<Object[]> join_list = new ArrayList<>();
         Object [] row = new Object[17];
+        int i = 0;
         String command = "select employees.* , employee_addresses.country , employee_addresses.state, employee_addresses.district, \n" +
         "employee_addresses.city_or_village, employee_addresses.street, employee_addresses.address_number, employee_addresses.mansion\n" +
         "   from employees join employee_addresses \n" +
@@ -120,11 +121,17 @@ public class EmployeeDao {
                 row[14] = rs.getString("street");
                 row[15] = rs.getInt("address_number");
                 row[16] = rs.getString("mansion");
+                System.out.println(row[0] + "  " +row[1]);
                 join_list.add(row);
+                System.out.println(join_list.get(i)[0] + "  " + join_list.get(i)[1] + "\n---");
+                i++;
             }          
         }catch(Exception e) {
             e.printStackTrace();
         }        
+        System.out.println(join_list.get(0)[1]+"\n+++");
+        System.out.println(join_list.get(1)[1]+"\n+++");
+        System.out.println(join_list.get(2)[1]+"\n+++");
         return join_list;
     }
     

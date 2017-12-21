@@ -58,7 +58,7 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
         String store_name = jComboBox2.getSelectedItem().toString();
         
         StoreDepServices storeDepService = StoreDepServices.getInstance();
-        if(!departament_name.equals("") && !store_name.equals("")) {
+        if(!departament_name.equals("none") && !store_name.equals("none")) {
             storeDepService.addStoreDepartament(departament_name, store_name);
         } else {
             JOptionPane.showMessageDialog(null, "Please set data for both fields.");
@@ -83,7 +83,7 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
         DepartamentServices departamentServices = DepartamentServices.getInstance();
         
         departaments_list = departamentServices.getDepartaments();
-        department_names_list.add("");
+        department_names_list.add("none");
         for(int i = 0 ; i < departaments_list.size() ; i++) {
             department_names_list.add(departaments_list.get(i).getDepartament_name());
         }
@@ -95,7 +95,7 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
         StoreServices storeServices = StoreServices.getInstance();
         
         stores_list = storeServices.getStores();
-        store_names_list.add("");
+        store_names_list.add("none");
         for(int i = 0 ; i < stores_list.size() ; i++) {
             store_names_list.add(stores_list.get(i).getStore_name());
         }
