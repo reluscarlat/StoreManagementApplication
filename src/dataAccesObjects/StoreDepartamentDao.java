@@ -86,12 +86,12 @@ public class StoreDepartamentDao {
         return true;
     }
     
-    public void deleteStoreDepartament(String store_name, String departament_name) throws SQLException {
-        String command = "delete from departaments where store_name = ? and departament_name = ?";
+    public void deleteStoreDepartament(String departament_name, String store_name) throws SQLException {
+        String command = "delete from stores_departaments where departament_name = ? and store_name = ?";
         
         try(PreparedStatement statement = connection.prepareStatement(command)) {
-            statement.setString(1, store_name);
             statement.setString(1, departament_name);
+            statement.setString(2, store_name);
             statement.executeUpdate();
         } catch(SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);

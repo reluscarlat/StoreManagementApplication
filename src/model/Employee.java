@@ -5,72 +5,70 @@
  */
 package model;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
  * @author relu
  */
 public class Employee {
-    private String employee_name,
-            employee_first_name;
-    private char [] cnp = new char[13];
-    private String serie,
+    private String first_name,
+            last_name;
+    private String cnp,
+            series,
             nbr,
             job_title;
     private double salary;
     private Date employment_data;
-    private int address_id;
     private String departament_name,
             store_name;
 
-    public Employee(String employee_name, String employee_first_name, String serie, String nbr, String job_title, double salary, Date employment_data, int address_id, String departament_name, String store_name) {
-        this.employee_name = employee_name;
-        this.employee_first_name = employee_first_name;
-        this.serie = serie;
+    public Employee(String first_name, String last_name, String cnp, String serie, String nbr, String job_title, double salary, Date employment_data, String departament_name, String store_name) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.cnp = cnp;
+        this.series = serie;
         this.nbr = nbr;
         this.job_title = job_title;
         this.salary = salary;
         this.employment_data = employment_data;
-        this.address_id = address_id;
         this.departament_name = departament_name;
         this.store_name = store_name;
     }
-    
+
     public Employee() {
-    
     }
 
-    public String getEmployee_name() {
-        return employee_name;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setEmployee_name(String employee_name) {
-        this.employee_name = employee_name;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getEmployee_first_name() {
-        return employee_first_name;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setEmployee_first_name(String employee_first_name) {
-        this.employee_first_name = employee_first_name;
+    public void setEmployee_last_name(String last_name) {
+        this.last_name = last_name;
     }
 
-    public char[] getCnp() {
+    public String getCnp() {
         return cnp;
     }
 
-    public void setCnp(char[] cnp) {
+    public void setCnp(String cnp) {
         this.cnp = cnp;
     }
 
-    public String getSerie() {
-        return serie;
+    public String getSeries() {
+        return series;
     }
 
     public void setSerie(String serie) {
-        this.serie = serie;
+        this.series = serie;
     }
 
     public String getNbr() {
@@ -105,14 +103,6 @@ public class Employee {
         this.employment_data = employment_data;
     }
 
-    public int getAddress_id() {
-        return address_id;
-    }
-
-    public void setAddress_id(int address_id) {
-        this.address_id = address_id;
-    }
-
     public String getDepartament_name() {
         return departament_name;
     }
@@ -128,5 +118,4 @@ public class Employee {
     public void setStore_name(String store_name) {
         this.store_name = store_name;
     }
-    
 }

@@ -9,9 +9,10 @@ package model;
  *
  * @author relu
  */
-public class EmployeeAddress {
-    private int id;
-    private String country,
+public class Address {
+    private String first_name,
+            last_name,
+            country,
             state,
             district,
             city_or_village,
@@ -19,8 +20,12 @@ public class EmployeeAddress {
     private int address_number;
     private String mansion;
 
-    public EmployeeAddress(int id, String country, String state, String district, String city_or_village, String street, int address_number, String mansion) {
-        this.id = id;
+    public Address() {
+    }
+    
+    public Address(String first_name, String last_name, String country, String state, String district, String city_or_village, String street, int address_number, String mansion) {
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.country = country;
         this.state = state;
         this.district = district;
@@ -29,17 +34,21 @@ public class EmployeeAddress {
         this.address_number = address_number;
         this.mansion = mansion;
     }
-    
-    public EmployeeAddress() {
-    
+
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public int getId() {
-        return id;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getCountry() {
@@ -97,6 +106,5 @@ public class EmployeeAddress {
     public void setMansion(String mansion) {
         this.mansion = mansion;
     }
-    
     
 }

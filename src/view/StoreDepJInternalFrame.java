@@ -8,6 +8,7 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.Departament;
@@ -22,24 +23,23 @@ import service.StoreServices;
  * @author relu
  */
 public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
+    private static String criteria;
 
-    /**
-     * Creates new form DepStoreIntFrame
-     */
     public StoreDepJInternalFrame() {
         initComponents();
-        setTitle("DEPARTAMENTS & STORES");
+        setTitle("DEPARTMENTS & STORES");
+        criteria = "id";
         this.showTable();
         jMenuItem1.setText("Delete");
         jPopupMenu1.add(jMenuItem1);
-        jComboBox1.setModel( new DefaultComboBoxModel(getDepartments().toArray()) );
-        jComboBox2.setModel( new DefaultComboBoxModel(getStores().toArray()) );
+        jComboBox1.setModel( new DefaultComboBoxModel(getDepartmentsName().toArray()) );
+        jComboBox2.setModel( new DefaultComboBoxModel(getStoresName().toArray()) );
     }
     
     public void showTable() {
         StoreDepServices storeDepartamentService = StoreDepServices.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        List<StoreDepartament> store_departaments_list =  storeDepartamentService.getStoreDepartamentsOrderedBy("id");
+        List<StoreDepartament> store_departaments_list =  storeDepartamentService.getStoreDepartamentsOrderedBy(criteria);
         Object [] data  = new Object[6];
         for(int i = 0 ; i < store_departaments_list.size() ; i++) {
             StoreDepartament storeDepartament = store_departaments_list.get(i);
@@ -52,24 +52,50 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
             model.addRow(data);
         }
     }
-
-    public List<String> getDepartments() {
+    
+    public void addStoreDepartament() {
+        String departament_name = jComboBox1.getSelectedItem().toString();
+        String store_name = jComboBox2.getSelectedItem().toString();
+        
+        StoreDepServices storeDepService = StoreDepServices.getInstance();
+        if(!departament_name.equals("") && !store_name.equals("")) {
+            storeDepService.addStoreDepartament(departament_name, store_name);
+        } else {
+            JOptionPane.showMessageDialog(null, "Please set data for both fields.");
+        }
+        
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
+    }
+        
+    public void deleteStoreDepartament(String departament_name, String store_name) {
+        StoreDepServices storeDepService = StoreDepServices.getInstance();
+        storeDepService.deleteStoreDepartament(departament_name, store_name);
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
+    }
+    
+    public List<String> getDepartmentsName() {
         List<String> department_names_list = new ArrayList<String>();
         List<Departament> departaments_list = new ArrayList<Departament>();
         DepartamentServices departamentServices = DepartamentServices.getInstance();
         
         departaments_list = departamentServices.getDepartaments();
+        department_names_list.add("");
         for(int i = 0 ; i < departaments_list.size() ; i++) {
             department_names_list.add(departaments_list.get(i).getDepartament_name());
         }
         return department_names_list;
     }
-    public List<String> getStores() {
+    public List<String> getStoresName() {
         List<String> store_names_list = new ArrayList<String>();
         List<Store> stores_list = new ArrayList<Store>();
         StoreServices storeServices = StoreServices.getInstance();
         
         stores_list = storeServices.getStores();
+        store_names_list.add("");
         for(int i = 0 ; i < stores_list.size() ; i++) {
             store_names_list.add(stores_list.get(i).getStore_name());
         }
@@ -166,6 +192,11 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
         });
 
         jButton3.setText("STORES");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -176,7 +207,7 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, true, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -198,7 +229,7 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
             jTable1.getColumnModel().getColumn(5).setResizable(false);
         }
 
-        jButton4.setText("SAVE CHANGES");
+        jButton4.setText("ID");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -212,21 +243,19 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(197, 197, 197)
+                        .addGap(98, 98, 98)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1093, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 403, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,37 +269,50 @@ public class StoreDepJInternalFrame extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jButton2)
-                            .addComponent(jButton3))
-                        .addGap(33, 33, 33)))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(199, Short.MAX_VALUE))
+                            .addComponent(jButton3)
+                            .addComponent(jButton4))
+                        .addGap(40, 40, 40)))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
+        this.addStoreDepartament();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        criteria = "departament_name";
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if(SwingUtilities.isRightMouseButton(evt)) {
             int row = jTable1.rowAtPoint(evt.getPoint());
             String departament_name = jTable1.getValueAt(row, 1).toString();
+            String store_name = jTable1.getValueAt(row, 3).toString();
             jTable1.changeSelection(row, 0, false, false);
             jPopupMenu1.show(evt.getComponent(), evt.getX(), evt.getY());
-      //      jMenuItem1.addActionListener(e -> deleteDepartament(departament_name));
+            jMenuItem1.addActionListener(e -> deleteStoreDepartament(departament_name,store_name));
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        criteria = "store_name";
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-     //   this.saveChanges();
+        criteria = "id";
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
     }//GEN-LAST:event_jButton4ActionPerformed
 
 

@@ -110,6 +110,11 @@ public class BackOfficeFrm extends javax.swing.JFrame {
         jMenu1.add(jMenuItem10);
 
         jMenuItem4.setText("Employees");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem4);
 
         jMenuBar1.add(jMenu1);
@@ -254,6 +259,29 @@ public class BackOfficeFrm extends javax.swing.JFrame {
         }
         internalFrame.show();
     }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        jDesktopPane1.removeAll();
+        jDesktopPane1.updateUI();
+        
+        LogoJInternalFrame logoInternalFrame = new LogoJInternalFrame();
+        jDesktopPane1.add(logoInternalFrame);
+        try {
+            logoInternalFrame.setMaximum(true);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        logoInternalFrame.show();
+        
+        EmployeesJInternalFrame internalFrame = new EmployeesJInternalFrame();
+        jDesktopPane1.add(internalFrame);
+        try {
+            internalFrame.setMaximum(true);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        internalFrame.show();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
