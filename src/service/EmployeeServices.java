@@ -52,10 +52,10 @@ public class EmployeeServices {
         return Collections.emptyList();
     }
     
-    public List<Object[]> getEmployeesWithAddresses() {
+    public List<Object[]> getEmployeesWithAddresses(String criteria) {
         EmployeeDao employeeDao = new EmployeeDao(this.connection);
         try{
-            return employeeDao.getEmployeesWithAddresses();
+            return employeeDao.getEmployeesWithAddresses(criteria);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -74,7 +74,7 @@ public class EmployeeServices {
         return verify;
     }
     
-    public void deleteEmployeet(String first_name, String last_name) {
+    public void deleteEmployee(String first_name, String last_name) {
         EmployeeDao employeeDao = new EmployeeDao(this.connection);
         try{
             employeeDao.deleteEmployee(first_name, last_name);
@@ -91,4 +91,14 @@ public class EmployeeServices {
             Logger.getLogger(EmployeeServices.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
+    
+     public List<String> getDepartamentsForStore(String store) throws SQLException {
+         EmployeeDao employeeDao = new EmployeeDao(this.connection);
+        try{
+            return employeeDao.getDepartamentsForStore(store);
+        } catch(SQLException ex) {
+            Logger.getLogger(EmployeeServices.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Collections.emptyList();
+     }
 }

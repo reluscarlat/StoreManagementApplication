@@ -65,7 +65,7 @@ public class AddressServices {
         return verify;
     }
     
-    public void deleteDepartament(String first_name, String last_name) {
+    public void deleteAddress(String first_name, String last_name) {
         AddressDao addressDao = new AddressDao(this.connection);
         try{
             addressDao.deleteAddress(first_name, last_name);
@@ -74,7 +74,7 @@ public class AddressServices {
         }
     }
     
-    public void updateDepartament(String first_name, String last_name, Address address) {
+    public void updateAddress(String first_name, String last_name, Address address) {
         AddressDao addressDao = new AddressDao(this.connection);
         try{
             addressDao.updateAddress(first_name, last_name, address);

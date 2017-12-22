@@ -93,9 +93,12 @@ public class LoginFrame extends javax.swing.JFrame {
 
         jLabel1.setText("USERNAME");
 
+        jTextField1.setNextFocusableComponent(jPasswordField1);
+
         jLabel2.setText("PASSWORD");
 
         jButton1.setText("LOGIN");
+        jButton1.setNextFocusableComponent(jTextField1);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -103,6 +106,7 @@ public class LoginFrame extends javax.swing.JFrame {
         });
 
         admin_radio_b.setText("Administatror");
+        admin_radio_b.setNextFocusableComponent(user_radio_b);
         admin_radio_b.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 admin_radio_bActionPerformed(evt);
@@ -110,6 +114,9 @@ public class LoginFrame extends javax.swing.JFrame {
         });
 
         user_radio_b.setText("User");
+        user_radio_b.setNextFocusableComponent(jButton1);
+
+        jPasswordField1.setNextFocusableComponent(admin_radio_b);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

@@ -77,7 +77,7 @@ public class DepartamentDao {
         }        
         return departaments_list;
     }
-    
+        
     public void deleteDepartament(String departament_name) throws SQLException {
         String command = "delete from departaments where departament_name = ?";
         

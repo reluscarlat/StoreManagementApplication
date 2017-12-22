@@ -36,7 +36,6 @@ public class StoreDepartamentDao {
 "		left outer join stores on stores_departaments.store_name = stores.store_name) as myJoin\n" +
 "			where myJoin.store_name is not null \n" +
 "				order by myJoin." + criteria;      
-        //int id, String departament_name, String departament_abbreviation, String store_name, String phone_number, String email
         try(PreparedStatement statement = connection.prepareStatement(command);
             ResultSet rs = statement.executeQuery();
             ) {

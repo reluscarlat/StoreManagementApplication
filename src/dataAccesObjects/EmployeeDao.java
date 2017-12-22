@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.Departament;
 import model.Employee;
 
 /**
@@ -28,11 +29,12 @@ public class EmployeeDao {
     }
     
     public boolean addEmployee(Employee employee) throws SQLException {
-        String select_command = "select * from employees where employee_first_name = ? and employee_last_name = ?";
+        String select_command = "select * from employees where employee_first_name = ? and employee_last_name = ? or cnp = ?";
         
         try(PreparedStatement statement = connection.prepareStatement(select_command)) {
             statement.setString(1, employee.getFirst_name());
-            statement.setString(1, employee.getLast_name());
+            statement.setString(2, employee.getLast_name());
+            statement.setString(3, employee.getCnp());
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
                 JOptionPane.showMessageDialog(null,"This employee already exists.");
@@ -92,18 +94,19 @@ public class EmployeeDao {
         return employees_list;
     }
     
-    public List<Object[]> getEmployeesWithAddresses() {
+    public List<Object[]> getEmployeesWithAddresses(String criteria) {
         List<Object[]> join_list = new ArrayList<>();
-        Object [] row = new Object[17];
-        int i = 0;
+        
         String command = "select employees.* , employee_addresses.country , employee_addresses.state, employee_addresses.district, \n" +
         "employee_addresses.city_or_village, employee_addresses.street, employee_addresses.address_number, employee_addresses.mansion\n" +
         "   from employees join employee_addresses \n" +
-        "       where employees.employee_first_name = employee_addresses.employee_first_name ;\n";
+        "       where employees.employee_first_name = employee_addresses.employee_first_name and "
+                + "employees.employee_last_name = employee_addresses.employee_last_name order by " + criteria;
         try(PreparedStatement statement = connection.prepareStatement(command);
-            ResultSet rs = statement.executeQuery();
+                ResultSet rs = statement.executeQuery();
             ) {
             while(rs.next()) {
+                Object [] row = new Object[17];
                 row[0] = rs.getString("employee_first_name");
                 row[1] = rs.getString("employee_last_name");
                 row[2] = rs.getString("cnp");
@@ -121,17 +124,11 @@ public class EmployeeDao {
                 row[14] = rs.getString("street");
                 row[15] = rs.getInt("address_number");
                 row[16] = rs.getString("mansion");
-                System.out.println(row[0] + "  " +row[1]);
                 join_list.add(row);
-                System.out.println(join_list.get(i)[0] + "  " + join_list.get(i)[1] + "\n---");
-                i++;
             }          
         }catch(Exception e) {
             e.printStackTrace();
         }        
-        System.out.println(join_list.get(0)[1]+"\n+++");
-        System.out.println(join_list.get(1)[1]+"\n+++");
-        System.out.println(join_list.get(2)[1]+"\n+++");
         return join_list;
     }
     
@@ -171,5 +168,26 @@ public class EmployeeDao {
         } catch(SQLException ex) {
             Logger.getLogger(EmployeeDao.class.getName()).log(Level.SEVERE, null, ex);
         }         
+    }
+    
+     public List<String> getDepartamentsForStore(String store) throws SQLException {
+        List<String> departaments_list = new ArrayList<>();
+        departaments_list.add("none");
+        String command = "select departament_name from (\n" +
+        "	select departaments.departament_name, stores.store_name \n" +
+        "            from departaments left outer join stores_departaments on departaments.departament_name = stores_departaments.departament_name \n" +
+        "               left outer join stores on stores_departaments.store_name = stores.store_name)\n" +
+                        " as myJoin where myJoin.store_name = ? order by departament_name;";      
+        
+        try(PreparedStatement statement = connection.prepareStatement(command)) {
+                statement.setString(1, store);
+                ResultSet rs = statement.executeQuery();
+            while(rs.next()) {
+                departaments_list.add(rs.getString("departament_name"));
+            }          
+        }catch(Exception e) {
+            e.printStackTrace();
+        }        
+        return departaments_list;
     }
 }

@@ -32,10 +32,9 @@ public class AddressDao {
         
         try(PreparedStatement statement = connection.prepareStatement(select_command)) {
             statement.setString(1, address.getFirst_name());
-            statement.setString(1, address.getLast_name());
+            statement.setString(2, address.getLast_name());
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
-                JOptionPane.showMessageDialog(null,"This employee already has an address.");
                 return false;  
             } 
         } catch(Exception e) { 
