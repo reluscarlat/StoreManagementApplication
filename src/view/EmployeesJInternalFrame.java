@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import model.Address;
 import model.Departament;
 import model.Store;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import service.AddressServices;
 import service.DepartamentServices;
 import service.StoreServices;
@@ -30,6 +31,7 @@ import service.StoreServices;
  * @author relu
  */
 public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
+    private String criteria;
     private String selected_store;
     private final List<String> criterias = Arrays.asList("Hire date", "Salary", "Department", "Store", "Country");
     /**
@@ -37,7 +39,7 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
      */
     public EmployeesJInternalFrame() {
         initComponents();
-        
+        criteria = "employment_data";
         setTitle("EMPLOYEES");
         
         jMenuItem1.setText("Delete");
@@ -46,18 +48,22 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
         LocalDate currentDate = LocalDate.now();
         jTextField8.setText(currentDate.toString());
         
-        this.showTable();
+        this.showTable(criteria);
         
+        //AutoCompleteDecorator.decorate(jTextField17, criterias, false);
+        AutoCompleteDecorator.decorate(jComboBox1);
+        AutoCompleteDecorator.decorate(jComboBox2);
+        AutoCompleteDecorator.decorate(jComboBox3);
         jComboBox2.setModel( new DefaultComboBoxModel(getStoresName().toArray()) );
         selected_store = jComboBox2.getSelectedItem().toString() ;
         jComboBox1.setModel( new DefaultComboBoxModel(getDepartmenstForStore(selected_store).toArray()) ); 
         jComboBox3.setModel( new DefaultComboBoxModel(criterias.toArray()));
     }
 
-     public void showTable() {
+     public void showTable(String criteria) {
         EmployeeServices employeeServices = EmployeeServices.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        List<Object[]> employees_with_addresses_list =  employeeServices.getEmployeesWithAddresses("employment_data");
+        List<Object[]> employees_with_addresses_list =  employeeServices.getEmployeesWithAddresses(criteria);
         for( int i = 0 ; i < employees_with_addresses_list.size() ; i++) {
             Object [] row = employees_with_addresses_list.get(i);
             model.addRow(row);
@@ -148,7 +154,7 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
         }
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
-        showTable();   
+        showTable(criteria);   
     }
      
     public List<String> getDepartmenstForStore(String store) {
@@ -180,7 +186,7 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
         addressServices.deleteAddress(first_name, last_name);
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
-        showTable();  
+        showTable(criteria);  
     }
     
     @SuppressWarnings("unchecked")
@@ -374,7 +380,6 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
         jTextField16.setText("0");
         jTextField16.setNextFocusableComponent(jTextField17);
 
-        jTextField17.setText(" ");
         jTextField17.setNextFocusableComponent(jButton1);
         jTextField17.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -552,6 +557,11 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
         jLabel18.setText("SORT BY :");
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox3ItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -659,6 +669,32 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jComboBox3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox3ItemStateChanged
+        String comboBoxValue = jComboBox3.getSelectedItem().toString();
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        if(comboBoxValue.equals("Hire date")) {
+             criteria = "employment_data";
+                showTable(criteria);
+        }
+        if(comboBoxValue.equals("Salary")) {
+             criteria = "salary";
+                showTable(criteria);
+        }
+        if(comboBoxValue.equals("Department")) {
+             criteria = "departament_name";
+                showTable(criteria);
+        }
+        if(comboBoxValue.equals("Store")) {
+             criteria = "store_name";
+                showTable(criteria);
+        }
+        if(comboBoxValue.equals("Country")) {
+             criteria = "country";
+                showTable(criteria);
+        }
+    }//GEN-LAST:event_jComboBox3ItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
