@@ -10,20 +10,29 @@ package model;
  * @author relu
  */
 public class Provider {
+    private int id;
     private String provider_name,
             phone_number,
             email;
 
-    public Provider(String provider_name, String phone_number, String email) {
+    public Provider() {
+    }
+    
+    public Provider(int id, String provider_name, String phone_number, String email) {
+        this.id = id;
         this.provider_name = provider_name;
         this.phone_number = phone_number;
         this.email = email;
     }
 
-    public Provider() {
-    
+    public int getId() {
+        return id;
     }
-    
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getProvider_name() {
         return provider_name;
     }

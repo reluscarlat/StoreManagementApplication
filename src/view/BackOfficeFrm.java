@@ -128,6 +128,11 @@ public class BackOfficeFrm extends javax.swing.JFrame {
         jMenu2.add(jMenuItem6);
 
         jMenuItem7.setText("Providers");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem7);
 
         jMenuItem8.setText("Fiscal Bills");
@@ -282,6 +287,29 @@ public class BackOfficeFrm extends javax.swing.JFrame {
         }
         internalFrame.show();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        jDesktopPane1.removeAll();
+        jDesktopPane1.updateUI();
+        
+        LogoJInternalFrame logoInternalFrame = new LogoJInternalFrame();
+        jDesktopPane1.add(logoInternalFrame);
+        try {
+            logoInternalFrame.setMaximum(true);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        logoInternalFrame.show();
+        
+        ProvidersJInternalFrame internalFrame = new ProvidersJInternalFrame();
+        jDesktopPane1.add(internalFrame);
+        try {
+            internalFrame.setMaximum(true);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        internalFrame.show();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     /**
      * @param args the command line arguments
