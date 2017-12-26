@@ -5,21 +5,14 @@ use storeDataBase;
 #drop database storedatabase;
 create table if not exists users(
 	user_id tinyint not null primary key auto_increment,
-    username varchar(50) not null,
+    username varchar(50) not null unique,
     pass varchar(50) not null,
     employ_first_name varchar(50) not null,
     employ_name varchar(50) not null,
     role enum('admin','normal') default'normal'
 );
 
-insert into users values(null, '', '', '123', 'Andrei','admin' ),
-	(null, 'GrAu', 'aaaaFFFFaa', 'Greg', 'Aurel', 'normal'),
-    (null, 'CoAl', 'WWRRTTasd', 'Codin', 'Alin', 'normal' );
-    
-insert into users values (null, 'admin', '123', 'John', 'Cena', 'admin');
-
 #truncate table users;
-
 
 create table if not exists fiscal_bill(
 	id int not null primary key auto_increment,
@@ -33,6 +26,8 @@ create table if not exists fiscal_bill(
 create table if not exists sold_products(
 	id tinyint not null primary key auto_increment,
     product_name varchar(100) not null,
+    selling_date date,
+    selling_tine time,
     nbr_of_products double not null,
     bill_id int not null,
     foreign key(bill_id) references fiscal_bill(id) 
@@ -41,12 +36,16 @@ create table if not exists sold_products(
 );
 
 create table if not exists providers(
+	id int unique auto_increment,
     provider_name varchar(50) not null primary key,
     phone_number varchar(20) not null,
     email varchar(50) not null
 );
 
+#alter table providers add column id int unique auto_increment;
+
 create table if not exists stores(
+	id tinyint not null auto_increment unique,
     store_name varchar(50) not null primary key unique,
     address varchar(150) not null,
     phone_number varchar(20) not null,
@@ -80,6 +79,7 @@ create table if not exists stores_products(
 );
 
 create table if not exists departaments(
+	id int unique auto_increment,
     departament_name varchar(50) not null primary key,
     description varchar(250) not null default '',
     departament_abbreviation varchar(6) not null
@@ -99,29 +99,30 @@ create table if not exists stores_departaments(
 );
 
 create table if not exists employee_addresses(
-	id smallint not null primary key auto_increment,
+	employee_first_name varchar(50) not null,
+    employee_last_name varchar(50) not null, 
     country varchar(50) not null,
-    state varchar(50),
-    district varchar(50),
+    state varchar(50) default 'none',
+    district varchar(50) default 'none',
     city_or_village varchar(50) not null,
     street varchar(50) not null,
-    address_number smallint,
-    mansion varchar(30) 
+    address_number smallint default 0,
+    mansion varchar(30) default 'none',
+    primary key(employee_first_name, employee_last_name)
 );
 
 create table if not exists employees(
-	employee_name varchar(50) not null,
-    employee_first_name varchar(50) not null,
-    cnp char(13) not null primary key ,
+	employee_first_name varchar(50) not null,
+    employee_last_name varchar(50) not null,
+    cnp char(13) not null unique primary key ,
     series varchar(5) not null,
     nbr varchar(10) not null,
     job_title varchar(30) not null,
     salary double not null default 1350,
     employment_data date not null,
-    address_id smallint not null,
     departament_name varchar(50) not null,
     store_name varchar(50) not null,
-    foreign key(address_id) references employee_addresses(id)
+    foreign key(employee_first_name, employee_last_name) references employee_addresses(employee_first_name, employee_last_name)
 		on update cascade
         on delete cascade,
     foreign key(departament_name) references departaments(departament_name)
