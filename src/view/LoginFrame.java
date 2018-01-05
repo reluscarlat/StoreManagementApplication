@@ -105,7 +105,7 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         });
 
-        admin_radio_b.setText("Administatror");
+        admin_radio_b.setText("Administrator");
         admin_radio_b.setNextFocusableComponent(user_radio_b);
         admin_radio_b.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

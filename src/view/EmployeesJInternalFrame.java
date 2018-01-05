@@ -44,6 +44,8 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
         
         jMenuItem1.setText("Delete");
         jPopupMenu1.add(jMenuItem1);
+        jMenuItem2.setText("Modify");
+        jPopupMenu1.add(jMenuItem2);
         
         LocalDate currentDate = LocalDate.now();
         jTextField8.setText(currentDate.toString());
@@ -60,7 +62,7 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
         jComboBox3.setModel( new DefaultComboBoxModel(criterias.toArray()));
     }
 
-     public void showTable(String criteria) {
+    public void showTable(String criteria) {
         EmployeeServices employeeServices = EmployeeServices.getInstance();
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         List<Object[]> employees_with_addresses_list =  employeeServices.getEmployeesWithAddresses(criteria);
@@ -195,6 +197,7 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
@@ -242,6 +245,8 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
                 jMenuItem1ActionPerformed(evt);
             }
         });
+
+        jMenuItem2.setText("jMenuItem2");
 
         setClosable(true);
         setIconifiable(true);
@@ -721,6 +726,7 @@ public class EmployeesJInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane2;

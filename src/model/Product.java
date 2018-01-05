@@ -11,25 +11,25 @@ package model;
  */
 public class Product {
     private String product_name,
-            categori,
+            category,
             provider_name,
-            description,
-            store_name;
+            description;
     private int nbr_of_products;
     private double purchase_price,
             selling_price;
+    private String store_name;
 
-    public Product(String product_name, String categori, String provider_name, String description, String store_name, int nbr_of_products, double purchase_price, double selling_price) {
+    public Product(String product_name, String category, String provider_name, String description, int nbr_of_products, double purchase_price, double selling_price, String store_name) {
         this.product_name = product_name;
-        this.categori = categori;
+        this.category = category;
         this.provider_name = provider_name;
         this.description = description;
-        this.store_name = store_name;
         this.nbr_of_products = nbr_of_products;
         this.purchase_price = purchase_price;
         this.selling_price = selling_price;
+        this.store_name = store_name;
     }
-    
+
     public Product() {
     
     }
@@ -42,12 +42,12 @@ public class Product {
         this.product_name = product_name;
     }
 
-    public String getCategori() {
-        return categori;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategori(String categori) {
-        this.categori = categori;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getProvider_name() {

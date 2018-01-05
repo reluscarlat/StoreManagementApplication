@@ -22,7 +22,7 @@ import model.Employee;
  * @author relu
  */
 public class EmployeeDao {
-        private Connection connection;
+    private Connection connection;
     
     public EmployeeDao(Connection connection) {
         this.connection = connection;
