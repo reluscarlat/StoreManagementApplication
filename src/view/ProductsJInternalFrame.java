@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.Product;
 import model.Store;
@@ -74,22 +75,44 @@ public class ProductsJInternalFrame extends javax.swing.JInternalFrame {
     }
     
     public void addProduct() {
+        
         String product_name = jTextField1.getText();
         String category = jTextField2.getText();
         String provider = jTextField3.getText();
         int nbr_of_prod = Integer.parseInt(jTextField4.getText());
         String store = jComboBox1.getSelectedItem().toString();
-        double purchase_price = Integer.parseInt(jTextField6.getText());
-        double selling_price = Integer.parseInt(jTextField7.getText());
+        double purchase_price = Double.parseDouble(jTextField6.getText());
+        double selling_price = Double.parseDouble(jTextField7.getText());
         String description = jTextArea1.getText();
         
         ProductServices productServices = ProductServices.getInstance();
         Product product = new Product(product_name, category, provider, description, nbr_of_prod, purchase_price, selling_price, store);
         if(getProvidersNames().contains(provider)){
-           productServices.addProduct(product);
+            if(productServices.addProduct(product)){
+                jTextField1.setText("");
+                jTextField2.setText("none");
+                jTextField3.setText("");
+                jTextField4.setText("0");
+                jTextArea1.setText("");
+                jTextField6.setText("0");
+                jTextField7.setText("0");
+                jComboBox1.setSelectedItem(getStoresNames().get(0).toString());
+           }
         }else if(!provider.equals("")){
             new AddProviderFrame();
         }
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
+    }
+    
+        public void deleteProduct(String product_name) {
+        ProductServices productService = ProductServices.getInstance();
+        productService.deleteProduct(product_name);
+        
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);
+        showTable();
     }
     
     /**
@@ -156,6 +179,24 @@ public class ProductsJInternalFrame extends javax.swing.JInternalFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
+
+        jTextField2.setText("none");
+
+        jTextField4.setText("0");
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
+
+        jTextField6.setText("0");
+        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField6ActionPerformed(evt);
+            }
+        });
+
+        jTextField7.setText("0");
 
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
@@ -265,6 +306,11 @@ public class ProductsJInternalFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -299,6 +345,24 @@ public class ProductsJInternalFrame extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         addProduct();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        if(SwingUtilities.isRightMouseButton(evt)) {
+            int row = jTable1.rowAtPoint(evt.getPoint());
+            String product_name = jTable1.getValueAt(row, 0).toString();
+            jTable1.changeSelection(row, 0, false, false);
+            jPopupMenu1.show(evt.getComponent(), evt.getX(), evt.getY());
+            jMenuItem1.addActionListener(e -> deleteProduct(product_name));
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

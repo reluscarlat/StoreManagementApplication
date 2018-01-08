@@ -83,6 +83,7 @@ public class ProvidersJInternalFrame extends javax.swing.JInternalFrame {
     public void deleteProvider(String provider_name) {
         ProviderServices providerService = ProviderServices.getInstance();
         providerService.deleteProvider(provider_name);
+        
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         model.setRowCount(0);
         showTable();
