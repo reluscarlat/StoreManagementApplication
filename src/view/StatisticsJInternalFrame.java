@@ -5,19 +5,84 @@
  */
 package view;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import model.Product;
+import service.ProductServices;
+import service.StoreServices;
+
 /**
  *
  * @author relu
  */
-public class StatisticsJInternalFrame extends javax.swing.JInternalFrame {
-
+// GOD object antipattern 
+public class StatisticsJInternalFrame extends javax.swing.JInternalFrame  {
+    private Connection connection;
+    private String url = "jdbc:mysql://localhost/storedatabase";
+    private String pass = "";
+    private String user = "root";
+    private DefaultListModel<String> model;
+    String store_name1;
     /**
      * Creates new form StatisticsJInternalFrame
      */
     public StatisticsJInternalFrame() {
         initComponents();
+        buttonGroup1.add(jRadioButton1);
+        buttonGroup1.add(jRadioButton2);
+        buttonGroup1.add(jRadioButton3);
+        buttonGroup1.add(jRadioButton4);
+        buttonGroup1.add(jRadioButton5);
+        buttonGroup1.add(jRadioButton6);
+        buttonGroup1.add(jRadioButton7);
+        buttonGroup1.add(jRadioButton7);
+        try{
+            connection = DriverManager.getConnection(url, user, pass);
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+        }
+        model = new DefaultListModel<>();
+        jComboBox1.setModel(new DefaultComboBoxModel(getStoresNames().toArray()));
+        List<String> providers_list = getProvidersForStore(store_name1);
+        providers_list.forEach(e -> model.addElement(e));
+        jList1.setModel(model);
+    }
+    
+    public List<String> getStoresNames() {
+        StoreServices storeServices = StoreServices.getInstance();
+        return storeServices.getStores()
+                .stream()
+                .map( s -> s.getStore_name())
+                .collect(Collectors.toList());
     }
 
+    public List<String> getProvidersForStore(String storeName) {  // Select all providers for a specific store
+        List<String> providers_mails_list = new ArrayList<>();
+        String command = "select distinct myJoin.provider_name from \n" +
+"	(select stores.store_name, products.provider_name from stores left join stores_products on stores.store_name = stores_products.store_name\n" +
+"           left join products on stores_products.product_name = products.product_name\n" +
+"           left join providers on products.provider_name = providers.provider_name) as myJoin \n" +
+"		where myJoin.store_name= ? ";      
+        try{
+            PreparedStatement statement = connection.prepareStatement(command);
+            statement.setString(1, storeName);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()) {
+                providers_mails_list.add(rs.getString("provider_name"));
+            }          
+        }catch(Exception e) {
+            e.printStackTrace();
+        }        
+        return providers_mails_list;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,6 +103,8 @@ public class StatisticsJInternalFrame extends javax.swing.JInternalFrame {
         jRadioButton4 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton6 = new javax.swing.JRadioButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -50,7 +117,12 @@ public class StatisticsJInternalFrame extends javax.swing.JInternalFrame {
 
         jScrollPane1.setViewportView(jList1);
 
-        jRadioButton1.setText("jRadioButton1");
+        jRadioButton1.setText("Afiseaza toti providerii pentru magazinul :");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         jRadioButton2.setText("jRadioButton2");
 
@@ -62,6 +134,20 @@ public class StatisticsJInternalFrame extends javax.swing.JInternalFrame {
 
         jRadioButton6.setText("jRadioButton6");
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("EXECUTA");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -69,15 +155,24 @@ public class StatisticsJInternalFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(66, 66, 66)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jRadioButton8)
-                        .addComponent(jRadioButton7)
-                        .addComponent(jRadioButton6)
-                        .addComponent(jRadioButton5)
-                        .addComponent(jRadioButton4)
-                        .addComponent(jRadioButton3)
-                        .addComponent(jRadioButton2)
-                        .addComponent(jRadioButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jRadioButton8)
+                                    .addComponent(jRadioButton7)
+                                    .addComponent(jRadioButton6)
+                                    .addComponent(jRadioButton5)
+                                    .addComponent(jRadioButton4)
+                                    .addComponent(jRadioButton3)
+                                    .addComponent(jRadioButton2))
+                                .addGap(202, 202, 202))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(jButton1))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 996, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -85,7 +180,10 @@ public class StatisticsJInternalFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addComponent(jRadioButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -102,15 +200,33 @@ public class StatisticsJInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(jRadioButton8)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(jRadioButton1.isSelected()) {
+        store_name1 = jComboBox1.getSelectedItem().toString();
+        model.clear();
+        model.addElement(getProvidersForStore(store_name1).toString());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;

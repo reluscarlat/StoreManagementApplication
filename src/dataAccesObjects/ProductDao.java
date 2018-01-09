@@ -69,6 +69,18 @@ public class ProductDao {
             e.printStackTrace();
             return false;
         }
+        
+        String command2 = "insert into stores_products values(null, ?, ?)";
+        
+        try(PreparedStatement statement = connection.prepareStatement(command2)) {
+            statement.setString(1, product.getProduct_name());
+            statement.setString(2, product.getStore_name());
+            statement.executeUpdate();
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
         return true;
     }
         
