@@ -65,6 +65,8 @@ create table if not exists products(
 		on delete cascade
         on update cascade
 );
+
+
 # N : N
 create table if not exists stores_products(
 	id bigint not null primary key auto_increment,
