@@ -23,7 +23,11 @@ import service.StoreServices;
  *
  * @author relu
  */
-// GOD object antipattern 
+
+//  ------------------------------------GOD object antipattern -----------------------------------
+
+//                I used this antipattern because I had to persent my Homework urgently
+
 public class StatisticsJInternalFrame extends javax.swing.JInternalFrame  {
     private Connection connection;
     private String url = "jdbc:mysql://localhost/storedatabase";
